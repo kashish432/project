@@ -17,11 +17,10 @@ jobs:
         run: |
           echo "${{ secrets.GCP_SA_KEY }}" > key.json
           gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project ${{ secrets.giit-411012 }}
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t gcr.io/${{ secrets.giit-411012 }}/frontend:latest .
-          docker tag gcr.io/${{ secrets.giit-411012 }}/frontend:latest gcr.io/${{ secrets.giit-411012 }}/frontend:${{ github.sha }}
-          docker push gcr.io/${{ secrets.giit-411012 }}/frontend:latest
-          docker push gcr.io/${{ secrets.giit-411012 }}/frontend:${{ github.sha }}
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/fe:latest .
+          docker tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/fe:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/your-image-name:${{ github.sha }}
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/fe:latest
