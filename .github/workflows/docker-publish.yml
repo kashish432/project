@@ -1,4 +1,4 @@
-name: Publish Docker Image to GCR
+name: Build and Push Docker Image
 
 on:
   push:
@@ -6,27 +6,22 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          repository: 'https://github.com/kashish432/project.git'
-          ref: 'main'
 
-      - name: Set up Google Cloud SDK
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v1
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: giit-411012
-          export_default_credentials: true
-
-      - name: Configure Docker CLI
+      - name: Authenticate with GCP
         run: |
-          echo ${{ secrets.GCP_SA_KEY }} | docker login -u _json_key --password-stdin https://gcr.io
+          echo "${{ secrets.GCP_SA_KEY }}" > key.json
+          gcloud auth activate-service-account --key-file=key.json
+          gcloud config set project ${{ secrets.giit-411012 }}
+
       - name: Build and Push Docker Image
         run: |
-          docker build -t gcr.io/giit-411012/Frontend:latest ./project/frontend
-          docker push gcr.io/giit-411012/Frontend:latest
+          docker build -t gcr.io/${{ secrets.giit-411012 }}/frontend:latest .
+          docker tag gcr.io/${{ secrets.giit-411012 }}/frontend:latest gcr.io/${{ secrets.giit-411012 }}/frontend:${{ github.sha }}
+          docker push gcr.io/${{ secrets.giit-411012 }}/frontend:latest
+          docker push gcr.io/${{ secrets.giit-411012 }}/frontend:${{ github.sha }}
