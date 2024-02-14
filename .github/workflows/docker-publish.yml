@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          repository: 'https://github.com/kashish432/project.git'
+          ref: 'main'
 
       - name: Set up Google Cloud SDK
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@v1
