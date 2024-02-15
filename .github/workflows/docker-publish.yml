@@ -24,13 +24,14 @@ jobs:
     - name: Authenticate GCR
       run: |
         gcloud info
-        gcloud auth configure-docker "$GCP_PROJECT_ID" --quiet
+        gcloud auth configure-docker "gcr.io/$GCP_PROJECT_ID" --quiet
 
     - name: Build Image
       run: |
-        docker build . -t "$GCP_PROJECT_ID"/frontend:latest
+        docker build -t "gcr.io/$GCP_PROJECT_ID/frontend:latest" .
+
 
     - name: Push Image
       run: |
-        docker tag "$GCP_PROJECT_ID"/frontend:latest "$GCP_PROJECT_ID"/frontend:latest
-        docker push "$GCP_PROJECT_ID"/frontend:latest
+        docker tag "gcr.io/$GCP_PROJECT_ID"/frontend:latest "gcr.io/$GCP_PROJECT_ID"/frontend:latest
+        docker push "gcr.io/$GCP_PROJECT_ID"/frontend:latest
