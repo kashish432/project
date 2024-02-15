@@ -28,11 +28,4 @@ jobs:
 
     - name: Build Image
       run: |
-         docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest" .
-
-
-
-    - name: Push Image
-      run: |
-        docker tag "gcr.io/${{ secrets.GCP_PROJECT_ID }}"/frontend:latest "gcr.io/${{ secrets.GCP_PROJECT_ID }}/"/frontend:latest
-        docker push "gcr.io/${{ secrets.GCP_PROJECT_ID }}/"/frontend:latest
+        docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest" -f /home/project/frontend/Dockerfile /home/project/frontend
