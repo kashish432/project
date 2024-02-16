@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-
+env:
+  IMAGE: ${{ secrets.GCP_PROJECT_ID }}/images/frontend
+  REGISTRY_HOSTNAME: us-central1-docker.pkg.dev
 jobs:
   buildandpush:
     name: Build Frontend Image
@@ -23,15 +25,15 @@ jobs:
 
     - name: Authenticate GCR
       run: |
-        gcloud auth configure-docker "us-central1-docker.pkg.dev" 
+        gcloud auth configure-docker "$REGISTRY_HOSTNAME" --quiet
 
     - name: Build Image
       working-directory: ./frontend
       run: |
-        docker buildx build --platform linux/amd64 -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/frontend:latest -f Dockerfile .
+        docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE":latest
 
     - name: Push Frontend Image
       run:  |
-        #docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
-        docker tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/frontend:latest us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/frontend:v1
-        docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/frontend:v1 
+        #docker push us-central1-docker.pkg.dev/:latest
+        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":latest "$REGISTRY_HOSTNAME"/"$IMAGE":V1
+        docker push "$REGISTRY_HOSTNAME"/"$IMAGE":V1 
