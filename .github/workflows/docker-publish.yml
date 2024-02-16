@@ -23,13 +23,13 @@ jobs:
 
     - name: Authenticate GCR
       run: |
-        gcloud info
         gcloud auth configure-docker "gcr.io/${{ secrets.GCP_PROJECT_ID }}" --quiet
 
     - name: Build Image
       working-directory: ./frontend
       run: |
-        docker buildx build --platform linux/amd64 -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest -f Dockerfile . 
+        docker buildx build --platform linux/amd64 -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest -f Dockerfile .
+
     - name: Push Frontend Image
       run:  |
-        docker push  gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
