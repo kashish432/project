@@ -28,7 +28,7 @@ jobs:
 
     - name: Build Image
       run: |
-        docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest" -f /home/project/frontend/Dockerfile /home/project/frontend
+        docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest" -f /home/kashkul8/project/frontend/Dockerfile /home/kashkul8/project/frontend
 
     - name: Debug Directory Content
       run: |
