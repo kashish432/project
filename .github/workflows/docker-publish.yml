@@ -23,7 +23,7 @@ jobs:
 
     - name: Authenticate GCR
       run: |
-        gcloud auth configure-docker "gcr.io/${{ secrets.GCP_PROJECT_ID }}" 
+        gcloud auth configure-docker "gcr.io/" 
 
     - name: Build Image
       working-directory: ./frontend
