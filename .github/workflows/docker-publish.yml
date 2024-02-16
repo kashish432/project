@@ -28,7 +28,7 @@ jobs:
 
     - name: Build Image
       run: |
-        docker buildx build --platform linux/amd64 -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest -f /home/kashish432/project/frontend/Dockerfile /home/kashish432/project/frontend 
+        docker buildx build --platform linux/amd64 -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest -f ./project/frontend/Dockerfile ./project/frontend 
 
     - name: Debug Directory Content
       run: |
