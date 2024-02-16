@@ -33,4 +33,5 @@ jobs:
     - name: Push Frontend Image
       run:  |
         #docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
-        docker push us-central1-docker.pkg.dev/giit-411012/frontend-app/frontend:latest
+        docker tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend-app/frontend:v1
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend-app/frontend:v1 
