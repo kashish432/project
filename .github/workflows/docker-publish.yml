@@ -6,6 +6,7 @@ on:
       - main
 env:
   IMAGE: ${{ secrets.GCP_PROJECT_ID }}/images/frontend
+  IMAGE1: ${{ secrets.GCP_PROJECT_ID }}/images/backend
   REGISTRY_HOSTNAME: us-central1-docker.pkg.dev
 jobs:
   buildandpush:
@@ -31,6 +32,11 @@ jobs:
       working-directory: ./frontend
       run: |
         docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE":latest
+   
+    - name: Build Backend Image
+      working-directory: ./backend
+      run: |
+        docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE1":latest
 
     - name: Push Frontend Image
       run:  |
