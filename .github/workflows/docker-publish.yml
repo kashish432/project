@@ -7,6 +7,7 @@ on:
 env:
   IMAGE: ${{ secrets.GCP_PROJECT_ID }}/images/frontend
   IMAGE1: ${{ secrets.GCP_PROJECT_ID }}/images/backend
+  IMAGE2: ${{ secrets.GCP_PROJECT_ID }}/images/mysql
   REGISTRY_HOSTNAME: us-central1-docker.pkg.dev
 jobs:
   buildandpush:
@@ -37,6 +38,12 @@ jobs:
       working-directory: ./backend
       run: |
         docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE1":latest
+    
+    - name: Build mysql Image
+      working-directory: ./backend
+      run: |
+        docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE2":latest
+
 
     - name: Push Frontend Image
       run:  |
