@@ -43,3 +43,10 @@ jobs:
         #docker push us-central1-docker.pkg.dev/:latest
         docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":latest "$REGISTRY_HOSTNAME"/"$IMAGE":V1
         docker push "$REGISTRY_HOSTNAME"/"$IMAGE":V1 
+
+    - name: Push Backend Image
+      run:  |
+        #docker push us-central1-docker.pkg.dev/:latest
+        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE1":latest "$REGISTRY_HOSTNAME"/"$IMAGE1":V1
+        docker push "$REGISTRY_HOSTNAME"/"$IMAGE1":V1 
+        
