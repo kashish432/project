@@ -1,0 +1,44 @@
+# mysql.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app-service-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "kash"
+            - name: MYSQL_DATABASE
+              value: "employees_db"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
