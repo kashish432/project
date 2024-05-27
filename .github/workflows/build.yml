@@ -1,27 +1,36 @@
-name: Build
+name: Deploy to GKE
 
 on:
   push:
     branches:
       - main
 
-
 jobs:
-  build:
-    name: Build and analyze
+  deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-     # - uses: sonarsource/sonarqube-quality-gate-action@master
-     #    timeout-minutes: 5
-      #  env:
-       #  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+    - name: Authenticate to GCP
+      run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" | gcloud auth activate-service-account --key-file=-
+
+    - name: Configure kubectl
+      run: |
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_CLUSTER_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Deploy backend to GKE
+      run: kubectl apply -f k8s/backend-deployment.yml
+
+    - name: Deploy frontend to GKE
+      run: kubectl apply -f k8s/frontend-deployment.yml
+
+    - name: Deploy MySQL to GKE
+      run: kubectl apply -f k8s/mysql-deployment.yml
