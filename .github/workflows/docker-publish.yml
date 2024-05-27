@@ -1,65 +1,64 @@
 name: Build and Push Docker Image
 
-on:
-  push:
-    branches:
-      - main
-env:
-  IMAGE: ${{ secrets.GCP_PROJECT_ID }}/images/frontend
-  IMAGE1: ${{ secrets.GCP_PROJECT_ID }}/images/backend
-  IMAGE2: ${{ secrets.GCP_PROJECT_ID }}/images/mysql
-  REGISTRY_HOSTNAME: us-central1-docker.pkg.dev
-jobs:
-  buildandpush:
-    name: Build Frontend Image
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Frontend
-      uses: actions/checkout@v2
+#on:
+ # push:
+  #  branches:
+  #    - main
+#env:
+ # IMAGE: ${{ secrets.GCP_PROJECT_ID }}/images/frontend
+ # IMAGE1: ${{ secrets.GCP_PROJECT_ID }}/images/backend
+ # IMAGE2: ${{ secrets.GCP_PROJECT_ID }}/images/mysql
+ # REGISTRY_HOSTNAME: us-central1-docker.pkg.dev
+#jobs:
+ # buildandpush:
+  #  name: Build Frontend Image
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #  - name: Checkout Frontend
+   #   uses: actions/checkout@v2
 
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v0'
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+   # - id: 'auth'
+    #  uses: 'google-github-actions/auth@v0'
+    #  with:
+      #  credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Set up Cloud SDK
-      uses: 'google-github-actions/setup-gcloud@v0'
+   # - name: Set up Cloud SDK
+     # uses: 'google-github-actions/setup-gcloud@v0'
 
-    - name: Authenticate GCR
-      run: |
-        gcloud auth configure-docker "$REGISTRY_HOSTNAME" --quiet
+  #  - name: Authenticate GCR
+   #   run: |
+     #   gcloud auth configure-docker "$REGISTRY_HOSTNAME" --quiet
 
-    - name: Build Image
-      working-directory: ./frontend
-      run: |
-        docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE":latest
+  #  - name: Build Image
+   #   working-directory: ./frontend
+    #  run: |
+     #   docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE":latest
    
-    - name: Build Backend Image
-      working-directory: ./backend
-      run: |
-        docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE1":latest
+  #  - name: Build Backend Image
+   #   working-directory: ./backend
+    #  run: |
+     #   docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE1":latest
     
-    - name: Build mysql Image
-      working-directory: ./backend
-      run: |
-        docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE2":latest
+   # - name: Build mysql Image
+   #   working-directory: ./backend
+     # run: |
+     #   docker build . -t "$REGISTRY_HOSTNAME"/"$IMAGE2":latest
 
 
-    - name: Push Frontend Image
-      run:  |
+  #  - name: Push Frontend Image
+    #  run:  |
         #docker push us-central1-docker.pkg.dev/:latest
-        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":latest "$REGISTRY_HOSTNAME"/"$IMAGE":V1
-        docker push "$REGISTRY_HOSTNAME"/"$IMAGE":V1 
-
-    - name: Push Backend Image
-      run:  |
+      #  docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":latest "$REGISTRY_HOSTNAME"/"$IMAGE":V1
+       # docker push "$REGISTRY_HOSTNAME"/"$IMAGE":V1 
+  #  - name: Push Backend Image
+    #  run:  |
         #docker push us-central1-docker.pkg.dev/:latest
-        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE1":latest "$REGISTRY_HOSTNAME"/"$IMAGE1":V1
-        docker push "$REGISTRY_HOSTNAME"/"$IMAGE1":V1 
+       # docker tag "$REGISTRY_HOSTNAME"/"$IMAGE1":latest "$REGISTRY_HOSTNAME"/"$IMAGE1":V1
+       # docker push "$REGISTRY_HOSTNAME"/"$IMAGE1":V1 
 
-    - name: Push Backend Image
-      run:  |
+  #  - name: Push Backend Image
+   #   run:  |
         #docker push us-central1-docker.pkg.dev/:latest
-        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE2":latest "$REGISTRY_HOSTNAME"/"$IMAGE2":V1
-        docker push "$REGISTRY_HOSTNAME"/"$IMAGE2":V1 
+      #  docker tag "$REGISTRY_HOSTNAME"/"$IMAGE2":latest "$REGISTRY_HOSTNAME"/"$IMAGE2":V1
+     #   docker push "$REGISTRY_HOSTNAME"/"$IMAGE2":V1 
         
